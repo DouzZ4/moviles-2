@@ -42,3 +42,10 @@ android {
 flutter {
     source = "../.."
 }
+
+apply (plugin: "com.google.gms.google-services")  // al final del archivo
+
+dependencies {
+  implementation platform('com.google.firebase:firebase-bom:32.2.0') // BOM
+  implementation 'com.google.firebase:firebase-firestore'           // Firestore
+}
