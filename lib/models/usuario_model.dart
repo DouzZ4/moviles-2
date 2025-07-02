@@ -8,6 +8,7 @@ class UsuarioModel {
   final String correo;
   final String username;
   final int documento;
+  final String contrasena;
 
   UsuarioModel({
     required this.id,
@@ -17,6 +18,7 @@ class UsuarioModel {
     required this.correo,
     required this.username,
     required this.documento,
+    required this.contrasena,
   });
 
   // Para Firestore
@@ -29,6 +31,7 @@ class UsuarioModel {
       correo: data['correo'] ?? '',
       username: data['username'] ?? '',
       documento: data['documento'] ?? 0,
+      contrasena: data['contrasena'] ?? '',
     );
   }
 
@@ -40,6 +43,7 @@ class UsuarioModel {
       'correo': correo,
       'username': username,
       'documento': documento,
+      'contrasena': contrasena,
     };
   }
 
@@ -53,6 +57,7 @@ class UsuarioModel {
       correo: map['correo'],
       username: map['username'],
       documento: map['documento'],
+      contrasena: map['contrasena'],
     );
   }
 
@@ -65,6 +70,7 @@ class UsuarioModel {
       'correo': correo,
       'username': username,
       'documento': documento,
+      'contrasena': contrasena,
     };
   }
 }

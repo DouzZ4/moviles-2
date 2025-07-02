@@ -22,6 +22,7 @@ class _RegisterViewState extends State<RegisterView> {
   final _correoController = TextEditingController();
   final _usernameController = TextEditingController();
   final _documentoController = TextEditingController();
+  final _contrasenaController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,6 +32,7 @@ class _RegisterViewState extends State<RegisterView> {
     _correoController.dispose();
     _usernameController.dispose();
     _documentoController.dispose();
+    _contrasenaController.dispose();
     super.dispose();
   }
 
@@ -44,6 +46,7 @@ class _RegisterViewState extends State<RegisterView> {
         correo: _correoController.text.trim(),
         username: _usernameController.text.trim(),
         documento: int.parse(_documentoController.text.trim()),
+        contrasena: _contrasenaController.text.trim(),
       );
 
       final vm = Provider.of<UsuarioViewModel>(context, listen: false);
@@ -89,6 +92,17 @@ class _RegisterViewState extends State<RegisterView> {
               _inputField(_usernameController, 'Nombre de Usuario'),
               const SizedBox(height: 12),
               _inputField(_documentoController, 'Documento', tipo: TextInputType.number),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _contrasenaController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Contraseña',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Ingrese la contraseña' : null,
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _registrar,

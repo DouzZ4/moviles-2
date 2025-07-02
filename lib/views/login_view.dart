@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:checkinc/viewmodels/usuario_viewmodel.dart';
 import 'package:checkinc/models/usuario_model.dart';
 import 'dashboard_view.dart';
+import 'register_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -17,29 +18,23 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _documentoController = TextEditingController();
+  final _contrasenaController = TextEditingController();
 
   @override
   void dispose() {
     _usernameController.dispose();
     _documentoController.dispose();
+    _contrasenaController.dispose();
     super.dispose();
   }
 
   void _iniciarSesion() async {
     if (_formKey.currentState!.validate()) {
       final username = _usernameController.text.trim();
-      final doc = int.tryParse(_documentoController.text.trim());
-
-      if (doc == null) {
-        _mostrarMensaje('Documento inválido');
-        return;
-      }
-
+      final contrasena = _contrasenaController.text.trim();
       final vm = Provider.of<UsuarioViewModel>(context, listen: false);
       await vm.cargarUsuariosDesdeLocal();
-
-      final usuario = vm.obtenerPorUsernameYDocumento(username, doc);
-
+      final usuario = vm.obtenerPorUsernameYContrasena(username, contrasena);
       if (usuario != null) {
         _mostrarMensaje('Bienvenido, ${usuario.nombres}');
         Navigator.pushReplacement(
@@ -47,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
           MaterialPageRoute(builder: (_) => DashboardView(usuario: usuario)),
         );
       } else {
-        _mostrarMensaje('Usuario no encontrado');
+        _mostrarMensaje('Usuario o contraseña incorrectos');
       }
     }
   }
@@ -82,14 +77,14 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _documentoController,
-                keyboardType: TextInputType.number,
+                controller: _contrasenaController,
+                obscureText: true,
                 decoration: const InputDecoration(
-                  labelText: 'Documento',
+                  labelText: 'Contraseña',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'Ingrese el documento' : null,
+                    value == null || value.isEmpty ? 'Ingrese la contraseña' : null,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -99,6 +94,16 @@ class _LoginViewState extends State<LoginView> {
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Ingresar'),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => RegisterView()),
+                  );
+                },
+                child: const Text('¿No tienes cuenta? Regístrate aquí'),
               ),
             ],
           ),

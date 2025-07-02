@@ -47,6 +47,7 @@ class UsuarioViewModel with ChangeNotifier {
         correo: nuevo.correo,
         username: nuevo.username,
         documento: nuevo.documento,
+        contrasena: nuevo.contrasena,
       );
       await _firestore.collection('usuarios').doc(nuevoId).set(usuarioConId.toMap());
       await _localDbService.insert('usuarios', usuarioConId.toSQLite());
@@ -90,6 +91,16 @@ UsuarioModel? obtenerPorUsernameYDocumento(String username, int documento) {
   try {
     return _usuarios.firstWhere(
       (u) => u.username == username && u.documento == documento,
+    );
+  } catch (_) {
+    return null;
+  }
+}
+
+UsuarioModel? obtenerPorUsernameYContrasena(String username, String contrasena) {
+  try {
+    return _usuarios.firstWhere(
+      (u) => u.username == username && u.contrasena == contrasena,
     );
   } catch (_) {
     return null;

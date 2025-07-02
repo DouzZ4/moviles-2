@@ -24,6 +24,14 @@ class LocalDBService {
       path,
       version: 1,
       onCreate: _onCreate,
+      onOpen: (db) async {
+        // Migración: agrega la columna 'contrasena' si no existe
+        final columns = await db.rawQuery("PRAGMA table_info(usuarios)");
+        final hasContrasena = columns.any((col) => col['name'] == 'contrasena');
+        if (!hasContrasena) {
+          await db.execute("ALTER TABLE usuarios ADD COLUMN contrasena TEXT");
+        }
+      },
     );
   }
 

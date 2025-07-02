@@ -114,6 +114,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
                 decoration: const InputDecoration(
                   labelText: 'Fecha',
                   border: OutlineInputBorder(),
+                  hintText: 'Ej: 2025-07-02',
                 ),
                 validator: (value) {
                   if (_fechaSeleccionada == null) {
