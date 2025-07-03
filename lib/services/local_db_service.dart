@@ -32,10 +32,21 @@ class LocalDBService {
       onCreate: _onCreate,
       onOpen: (db) async {
         // Migración: agrega la columna 'contrasena' si no existe
-        final columns = await db.rawQuery("PRAGMA table_info(usuarios)");
-        final hasContrasena = columns.any((col) => col['name'] == 'contrasena');
+        final columnsUsuarios = await db.rawQuery("PRAGMA table_info(usuarios)");
+        final hasContrasena = columnsUsuarios.any((col) => col['name'] == 'contrasena');
         if (!hasContrasena) {
           await db.execute("ALTER TABLE usuarios ADD COLUMN contrasena TEXT");
+        }
+        // Migración: agrega la columna 'nivel' si no existe en glucosa
+        final columnsGlucosa = await db.rawQuery("PRAGMA table_info(glucosa)");
+        final hasNivel = columnsGlucosa.any((col) => col['name'] == 'nivel');
+        if (!hasNivel) {
+          await db.execute("ALTER TABLE glucosa ADD COLUMN nivel REAL");
+        }
+        // Migración: agrega la columna 'momento' si no existe en glucosa
+        final hasMomento = columnsGlucosa.any((col) => col['name'] == 'momento');
+        if (!hasMomento) {
+          await db.execute("ALTER TABLE glucosa ADD COLUMN momento TEXT");
         }
       },
     );

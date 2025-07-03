@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // Importa los ViewModels globales para el manejo de estado
 import 'package:checkinc/viewmodels/usuario_viewmodel.dart';
@@ -54,6 +55,16 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color(0xFF3058a6),
           scaffoldBackgroundColor: Colors.white,
         ),
+        // Configuración de localización para widgets como DatePicker
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('es', ''), // Español
+          Locale('en', ''), // Inglés (opcional)
+        ],
         home: const LoginView(), // Vista inicial
         // Sistema de rutas dinámico para pasar argumentos
         onGenerateRoute: (settings) {
