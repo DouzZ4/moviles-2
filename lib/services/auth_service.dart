@@ -1,14 +1,19 @@
 // lib/services/auth_service.dart
+// Servicio de autenticación y gestión de usuarios para la app CheckINC.
+// Permite registrar, autenticar y obtener usuarios desde Firestore.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/usuario_model.dart';
 
 class AuthService {
+  // Instancia de Firestore
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Referencia a la colección de usuarios
   final CollectionReference _usuariosRef =
       FirebaseFirestore.instance.collection('usuarios');
 
-  // Registrar un nuevo usuario en Firestore
+  /// Registra un nuevo usuario en Firestore
+  /// Lanza una excepción si ocurre un error
   Future<void> registerUser(UsuarioModel usuario) async {
     try {
       await _usuariosRef.doc(usuario.id).set(usuario.toMap());
@@ -17,7 +22,9 @@ class AuthService {
     }
   }
 
-  // Autenticación simple por username y correo (se puede adaptar a Firebase Auth si lo deseas)
+  /// Autenticación simple por username y correo
+  /// Devuelve el usuario si existe, o null si no se encuentra
+  /// (Se puede adaptar a Firebase Auth si se requiere seguridad real)
   Future<UsuarioModel?> login(String username, String correo) async {
     try {
       QuerySnapshot snapshot = await _usuariosRef
@@ -37,7 +44,8 @@ class AuthService {
     }
   }
 
-  // Obtener usuario por ID
+  /// Obtiene un usuario por su ID
+  /// Devuelve el usuario si existe, o null si no se encuentra
   Future<UsuarioModel?> getUsuarioById(String id) async {
     try {
       final doc = await _usuariosRef.doc(id).get();

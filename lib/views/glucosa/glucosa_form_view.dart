@@ -1,11 +1,23 @@
+// lib/views/glucosa/glucosa_form_view.dart
+// Vista para registrar un nuevo valor de glucosa en la app CheckINC.
+// Permite al usuario ingresar el nivel, la fecha y el momento del día.
+//
+// Lógica principal:
+// - Permite al usuario ingresar el nivel de glucosa, seleccionar la fecha y especificar el momento del día.
+// - Valida los campos antes de guardar.
+// - Usa el ViewModel para guardar el registro en la base de datos local o remota.
+// - Muestra mensajes de éxito o error según el resultado.
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:checkinc/models/glucosa_model.dart';
 import 'package:checkinc/viewmodels/glucosa_viewmodel.dart';
 
 class GlucosaFormView extends StatefulWidget {
+  /// ID del usuario al que se asociará el registro de glucosa
   final String idUsuario;
 
+  /// Constructor requiere el idUsuario
   const GlucosaFormView({super.key, required this.idUsuario});
 
   @override
@@ -13,21 +25,26 @@ class GlucosaFormView extends StatefulWidget {
 }
 
 class _GlucosaFormViewState extends State<GlucosaFormView> {
+  // Llave para el formulario y controladores de los campos
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nivelController = TextEditingController();
   final TextEditingController _fechaController = TextEditingController();
   final TextEditingController _momentoController = TextEditingController();
 
+  // Fecha seleccionada por el usuario
   DateTime? _fechaSeleccionada;
 
   @override
   void dispose() {
+    // Libera los controladores al destruir la vista para evitar fugas de memoria
     _nivelController.dispose();
     _fechaController.dispose();
     _momentoController.dispose();
     super.dispose();
   }
 
+  /// Muestra un selector de fecha y actualiza el campo correspondiente
+  /// Al seleccionar una fecha, se actualiza el controlador y la variable interna
   Future<void> _seleccionarFecha(BuildContext context) async {
     final DateTime? fechaElegida = await showDatePicker(
       context: context,
@@ -45,14 +62,18 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
     }
   }
 
+  /// Formatea la fecha seleccionada a yyyy-MM-dd para mostrarla en el campo
   String _formatearFecha(DateTime fecha) {
     return "${fecha.year}-${fecha.month.toString().padLeft(2, '0')}-${fecha.day.toString().padLeft(2, '0')}";
   }
 
+  /// Valida y guarda el registro de glucosa usando el ViewModel
+  /// Si la validación es exitosa, crea un nuevo modelo y lo guarda
+  /// Muestra un mensaje de éxito o error según el resultado
   void _guardar() async {
     if (_formKey.currentState!.validate()) {
       final nuevo = GlucosaModel(
-        id: '',
+        id: '', // El id se asigna automáticamente
         idUsuario: widget.idUsuario,
         nivel: double.tryParse(_nivelController.text.trim()) ?? 0.0,
         fecha: _fechaSeleccionada!,
@@ -88,6 +109,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
           key: _formKey,
           child: Column(
             children: [
+              // Campo para el nivel de glucosa (numérico, obligatorio)
               TextFormField(
                 controller: _nivelController,
                 keyboardType: TextInputType.number,
@@ -107,6 +129,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
                 },
               ),
               const SizedBox(height: 12),
+              // Campo para la fecha (solo lectura, usa selector de fecha)
               TextFormField(
                 controller: _fechaController,
                 readOnly: true,
@@ -124,6 +147,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
                 },
               ),
               const SizedBox(height: 12),
+              // Campo para el momento del día (ejemplo: ayunas, después de comer)
               TextFormField(
                 controller: _momentoController,
                 decoration: const InputDecoration(
@@ -134,6 +158,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
                     value == null || value.isEmpty ? 'Ingrese el momento' : null,
               ),
               const SizedBox(height: 20),
+              // Botón para guardar el registro
               ElevatedButton(
                 onPressed: _guardar,
                 style: ElevatedButton.styleFrom(

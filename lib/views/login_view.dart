@@ -1,4 +1,6 @@
-// lib/views/login_view.dart
+// login_view.dart
+// Vista de inicio de sesión para la app CheckINC.
+// Permite al usuario autenticarse con su nombre de usuario y contraseña.
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  // Controladores para los campos del formulario
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _documentoController = TextEditingController();
@@ -22,12 +25,14 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void dispose() {
+    // Libera los controladores al destruir la vista
     _usernameController.dispose();
     _documentoController.dispose();
     _contrasenaController.dispose();
     super.dispose();
   }
 
+  /// Lógica para iniciar sesión
   void _iniciarSesion() async {
     if (_formKey.currentState!.validate()) {
       final username = _usernameController.text.trim();
@@ -47,6 +52,7 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
+  /// Muestra un mensaje en un SnackBar
   void _mostrarMensaje(String mensaje) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(mensaje)),
@@ -66,6 +72,7 @@ class _LoginViewState extends State<LoginView> {
           key: _formKey,
           child: Column(
             children: [
+              // Campo de usuario
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -76,6 +83,7 @@ class _LoginViewState extends State<LoginView> {
                     value == null || value.isEmpty ? 'Ingrese el usuario' : null,
               ),
               const SizedBox(height: 16),
+              // Campo de contraseña
               TextFormField(
                 controller: _contrasenaController,
                 obscureText: true,
@@ -87,6 +95,7 @@ class _LoginViewState extends State<LoginView> {
                     value == null || value.isEmpty ? 'Ingrese la contraseña' : null,
               ),
               const SizedBox(height: 24),
+              // Botón para iniciar sesión
               ElevatedButton(
                 onPressed: _iniciarSesion,
                 style: ElevatedButton.styleFrom(
@@ -96,6 +105,7 @@ class _LoginViewState extends State<LoginView> {
                 child: const Text('Ingresar'),
               ),
               const SizedBox(height: 12),
+              // Botón para ir a la pantalla de registro
               TextButton(
                 onPressed: () {
                   Navigator.push(

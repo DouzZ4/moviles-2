@@ -1,14 +1,22 @@
-// lib/models/glucosa_model.dart
+// glucosa_model.dart
+// Modelo de datos para los registros de glucosa en la app CheckINC.
+// Permite serialización y deserialización para Firestore y SQLite.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GlucosaModel {
+  /// Identificador único del registro de glucosa
   final String id;
+  /// ID del usuario al que pertenece el registro
   final String idUsuario;
+  /// Nivel de glucosa medido (mg/dL)
   final double nivel;
+  /// Fecha del registro (DateTime)
   final DateTime fecha;
-  final String momento; // Por ejemplo: 'Antes de comer', 'Después de comer'
+  /// Momento del día (ejemplo: 'Ayunas', 'Después de comer')
+  final String momento;
 
+  /// Constructor del modelo de glucosa
   GlucosaModel({
     required this.id,
     required this.idUsuario,
@@ -17,7 +25,7 @@ class GlucosaModel {
     required this.momento,
   });
 
-  // Para Firestore
+  /// Crea un registro de glucosa a partir de un mapa de Firestore
   factory GlucosaModel.fromMap(Map<String, dynamic> data, String documentId) {
     return GlucosaModel(
       id: documentId,
@@ -28,6 +36,7 @@ class GlucosaModel {
     );
   }
 
+  /// Convierte el registro a un mapa para Firestore
   Map<String, dynamic> toMap() {
     return {
       'idUsuario': idUsuario,
@@ -37,7 +46,7 @@ class GlucosaModel {
     };
   }
 
-  // Para SQLite
+  /// Crea un registro de glucosa a partir de un mapa de SQLite
   factory GlucosaModel.fromSQLite(Map<String, dynamic> map) {
     return GlucosaModel(
       id: map['id'],
@@ -48,6 +57,7 @@ class GlucosaModel {
     );
   }
 
+  /// Convierte el registro a un mapa para SQLite
   Map<String, dynamic> toSQLite() {
     return {
       'id': id,

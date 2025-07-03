@@ -1,4 +1,6 @@
-// lib/views/register_view.dart
+// register_view.dart
+// Vista de registro de usuario para la app CheckINC.
+// Permite crear una nueva cuenta local y en la nube, validando los datos ingresados.
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  // Controladores para los campos del formulario
   final _formKey = GlobalKey<FormState>();
   final _nombresController = TextEditingController();
   final _apellidosController = TextEditingController();
@@ -26,6 +29,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
+    // Libera los controladores al destruir la vista
     _nombresController.dispose();
     _apellidosController.dispose();
     _edadController.dispose();
@@ -36,6 +40,7 @@ class _RegisterViewState extends State<RegisterView> {
     super.dispose();
   }
 
+  /// Lógica para registrar un nuevo usuario
   void _registrar() async {
     if (_formKey.currentState!.validate()) {
       final usuario = UsuarioModel(
@@ -64,6 +69,7 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
+  /// Muestra un mensaje en un SnackBar
   void _mostrarMensaje(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
@@ -81,18 +87,25 @@ class _RegisterViewState extends State<RegisterView> {
           key: _formKey,
           child: ListView(
             children: [
+              // Campo de nombres
               _inputField(_nombresController, 'Nombres'),
               const SizedBox(height: 12),
+              // Campo de apellidos
               _inputField(_apellidosController, 'Apellidos'),
               const SizedBox(height: 12),
+              // Campo de edad
               _inputField(_edadController, 'Edad', tipo: TextInputType.number),
               const SizedBox(height: 12),
+              // Campo de correo
               _inputField(_correoController, 'Correo', tipo: TextInputType.emailAddress),
               const SizedBox(height: 12),
+              // Campo de nombre de usuario
               _inputField(_usernameController, 'Nombre de Usuario'),
               const SizedBox(height: 12),
+              // Campo de documento
               _inputField(_documentoController, 'Documento', tipo: TextInputType.number),
               const SizedBox(height: 12),
+              // Campo de contraseña
               TextFormField(
                 controller: _contrasenaController,
                 obscureText: true,
@@ -104,6 +117,7 @@ class _RegisterViewState extends State<RegisterView> {
                     value == null || value.isEmpty ? 'Ingrese la contraseña' : null,
               ),
               const SizedBox(height: 20),
+              // Botón para registrar
               ElevatedButton(
                 onPressed: _registrar,
                 style: ElevatedButton.styleFrom(
@@ -119,6 +133,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+  /// Widget reutilizable para campos de texto
   Widget _inputField(TextEditingController controller, String label,
       {TextInputType tipo = TextInputType.text}) {
     return TextFormField(
