@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:checkinc/viewmodels/usuario_viewmodel.dart';
 import 'package:checkinc/models/usuario_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dashboard_view.dart';
 import 'register_view.dart';
 
@@ -32,14 +33,13 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  /// Lógica para iniciar sesión
+  /// Lógica para iniciar sesión usando Firestore a través del ViewModel (MVVM)
   void _iniciarSesion() async {
     if (_formKey.currentState!.validate()) {
       final username = _usernameController.text.trim();
       final contrasena = _contrasenaController.text.trim();
       final vm = Provider.of<UsuarioViewModel>(context, listen: false);
-      await vm.cargarUsuariosDesdeLocal();
-      final usuario = vm.obtenerPorUsernameYContrasena(username, contrasena);
+      final usuario = await vm.autenticarUsuarioFirestore(username, contrasena);
       if (usuario != null) {
         _mostrarMensaje('Bienvenido, ${usuario.nombres}');
         Navigator.pushReplacement(
@@ -54,9 +54,9 @@ class _LoginViewState extends State<LoginView> {
 
   /// Muestra un mensaje en un SnackBar
   void _mostrarMensaje(String mensaje) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(mensaje)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(mensaje)));
   }
 
   @override
@@ -79,8 +79,11 @@ class _LoginViewState extends State<LoginView> {
                   labelText: 'Usuario',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Ingrese el usuario' : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Ingrese el usuario'
+                            : null,
               ),
               const SizedBox(height: 16),
               // Campo de contraseña
@@ -91,8 +94,11 @@ class _LoginViewState extends State<LoginView> {
                   labelText: 'Contraseña',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Ingrese la contraseña' : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Ingrese la contraseña'
+                            : null,
               ),
               const SizedBox(height: 24),
               // Botón para iniciar sesión

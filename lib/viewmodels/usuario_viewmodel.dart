@@ -9,6 +9,31 @@ import 'package:checkinc/services/local_db_service.dart';
 import 'package:uuid/uuid.dart';
 
 class UsuarioViewModel with ChangeNotifier {
+  /// Busca un usuario en Firestore por username y contraseña
+  Future<UsuarioModel?> autenticarUsuarioFirestore(
+    String username,
+    String contrasena,
+  ) async {
+    try {
+      final query =
+          await _firestore
+              .collection('usuarios')
+              .where('username', isEqualTo: username)
+              .where('contrasena', isEqualTo: contrasena)
+              .limit(1)
+              .get();
+      if (query.docs.isNotEmpty) {
+        final doc = query.docs.first;
+        return UsuarioModel.fromMap(doc.data(), doc.id);
+      }
+      return null;
+    } catch (e) {
+      _error = 'Error autenticando usuario: $e';
+      notifyListeners();
+      return null;
+    }
+  }
+
   // Instancia de Firestore
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // Servicio de base de datos local
@@ -34,9 +59,10 @@ class UsuarioViewModel with ChangeNotifier {
     notifyListeners();
     try {
       final snapshot = await _firestore.collection('usuarios').get();
-      _usuarios = snapshot.docs
-          .map((doc) => UsuarioModel.fromMap(doc.data(), doc.id))
-          .toList();
+      _usuarios =
+          snapshot.docs
+              .map((doc) => UsuarioModel.fromMap(doc.data(), doc.id))
+              .toList();
       // Guarda los usuarios en SQLite localmente
       for (var u in _usuarios) {
         await _localDbService.insert('usuarios', u.toSQLite());
@@ -62,7 +88,10 @@ class UsuarioViewModel with ChangeNotifier {
         documento: nuevo.documento,
         contrasena: nuevo.contrasena,
       );
-      await _firestore.collection('usuarios').doc(nuevoId).set(usuarioConId.toMap());
+      await _firestore
+          .collection('usuarios')
+          .doc(nuevoId)
+          .set(usuarioConId.toMap());
       await _localDbService.insert('usuarios', usuarioConId.toSQLite());
       _usuarios.add(usuarioConId);
       notifyListeners();
@@ -116,7 +145,10 @@ class UsuarioViewModel with ChangeNotifier {
   }
 
   /// Busca un usuario por username y contraseña
-  UsuarioModel? obtenerPorUsernameYContrasena(String username, String contrasena) {
+  UsuarioModel? obtenerPorUsernameYContrasena(
+    String username,
+    String contrasena,
+  ) {
     try {
       return _usuarios.firstWhere(
         (u) => u.username == username && u.contrasena == contrasena,

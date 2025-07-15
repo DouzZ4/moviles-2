@@ -8,9 +8,9 @@ plugins {
 
 android {
     namespace = "com.example.checkinc"
-    compileSdk = 35 // Actualizado a 35
+    compileSdk = flutter.compileSdkVersion
     buildToolsVersion = "35.0.0" // Añadido explícitamente
-    ndkVersion = "27.0.12077973"
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -23,8 +23,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.checkinc"
-        minSdk = 21
-        targetSdk = 35 // Actualizado a 35
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
         versionCode = 1
         versionName = "1.0"
     }
