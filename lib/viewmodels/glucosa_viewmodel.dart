@@ -32,15 +32,17 @@ class GlucosaViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final snapshot = await _firestore
-          .collection('glucosa')
-          .where('idUsuario', isEqualTo: idUsuario)
-          .orderBy('fecha', descending: true)
-          .get();
+      final snapshot =
+          await _firestore
+              .collection('glucosa')
+              .where('idUsuario', isEqualTo: idUsuario)
+              .orderBy('fecha', descending: true)
+              .get();
 
-      _registros = snapshot.docs
-          .map((doc) => GlucosaModel.fromMap(doc.data(), doc.id))
-          .toList();
+      _registros =
+          snapshot.docs
+              .map((doc) => GlucosaModel.fromMap(doc.data(), doc.id))
+              .toList();
 
       // Guarda los registros en SQLite localmente
       for (var g in _registros) {
@@ -95,4 +97,6 @@ class GlucosaViewModel with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> actualizarRegistro(GlucosaModel nuevo) async {}
 }

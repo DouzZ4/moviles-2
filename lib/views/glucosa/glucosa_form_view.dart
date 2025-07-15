@@ -6,7 +6,13 @@ import 'package:checkinc/viewmodels/glucosa_viewmodel.dart';
 class GlucosaFormView extends StatefulWidget {
   final String idUsuario;
 
-  const GlucosaFormView({super.key, required this.idUsuario});
+  final GlucosaModel? registroExistente;
+
+  const GlucosaFormView({
+    super.key,
+    required this.idUsuario,
+    this.registroExistente,
+  });
 
   @override
   State<GlucosaFormView> createState() => _GlucosaFormViewState();
@@ -84,7 +90,7 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
       );
 
       final nuevo = GlucosaModel(
-        id: '',
+        id: widget.registroExistente?.id ?? '',
         idUsuario: widget.idUsuario,
         nivel: double.tryParse(_nivelController.text.trim()) ?? 0.0,
         fecha: fechaConHora,
@@ -94,6 +100,13 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
       final glucosaVM = Provider.of<GlucosaViewModel>(context, listen: false);
       await glucosaVM.agregarRegistro(nuevo);
 
+      if (widget.registroExistente != null) {
+        // Actualizar registro existente
+        await glucosaVM.actualizarRegistro(nuevo);
+      } else {
+        // Agregar nuevo registro
+        await glucosaVM.agregarRegistro(nuevo);
+      }
       if (glucosaVM.error == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registro guardado correctamente')),
@@ -104,6 +117,19 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
           context,
         ).showSnackBar(SnackBar(content: Text('Error: ${glucosaVM.error}')));
       }
+    }
+  }
+
+  void initState() {
+    super.initState();
+    if (widget.registroExistente != null) {
+      final registro = widget.registroExistente!;
+      _nivelController.text = registro.nivel.toString();
+      _fechaSeleccionada = registro.fecha;
+      _fechaController.text = _formatearFecha(registro.fecha);
+      _horaSeleccionada = TimeOfDay.fromDateTime(registro.fecha);
+      _horaController.text = _formatearHora(_horaSeleccionada!);
+      _momentoController.text = registro.momento;
     }
   }
 
