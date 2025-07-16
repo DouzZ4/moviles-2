@@ -32,8 +32,12 @@ class LocalDBService {
       onCreate: _onCreate,
       onOpen: (db) async {
         // Migración: agrega la columna 'contrasena' si no existe
-        final columnsUsuarios = await db.rawQuery("PRAGMA table_info(usuarios)");
-        final hasContrasena = columnsUsuarios.any((col) => col['name'] == 'contrasena');
+        final columnsUsuarios = await db.rawQuery(
+          "PRAGMA table_info(usuarios)",
+        );
+        final hasContrasena = columnsUsuarios.any(
+          (col) => col['name'] == 'contrasena',
+        );
         if (!hasContrasena) {
           await db.execute("ALTER TABLE usuarios ADD COLUMN contrasena TEXT");
         }
@@ -44,9 +48,20 @@ class LocalDBService {
           await db.execute("ALTER TABLE glucosa ADD COLUMN nivel REAL");
         }
         // Migración: agrega la columna 'momento' si no existe en glucosa
-        final hasMomento = columnsGlucosa.any((col) => col['name'] == 'momento');
+        final hasMomento = columnsGlucosa.any(
+          (col) => col['name'] == 'momento',
+        );
         if (!hasMomento) {
           await db.execute("ALTER TABLE glucosa ADD COLUMN momento TEXT");
+        }
+        // Migración: agrega la columna 'sincronizado' si no existe en glucosa
+        final hasSincronizado = columnsGlucosa.any(
+          (col) => col['name'] == 'sincronizado',
+        );
+        if (!hasSincronizado) {
+          await db.execute(
+            "ALTER TABLE glucosa ADD COLUMN sincronizado INTEGER DEFAULT 0",
+          );
         }
       },
     );
@@ -73,7 +88,8 @@ class LocalDBService {
         fecha TEXT,
         hora TEXT,
         observaciones TEXT,
-        idUsuario TEXT
+        idUsuario TEXT,
+        sincronizado INTEGER DEFAULT 0
       )
     ''');
   }

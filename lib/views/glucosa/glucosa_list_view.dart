@@ -8,12 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:checkinc/viewmodels/glucosa_viewmodel.dart';
 
-class GlucosaListView extends StatelessWidget {
+class GlucosaListView extends StatefulWidget {
   /// ID del usuario cuyos registros se mostrarán
   final String idUsuario;
 
   /// Constructor requiere el idUsuario
   const GlucosaListView({super.key, required this.idUsuario});
+
+  @override
+  State<GlucosaListView> createState() => _GlucosaListViewState();
+}
+
+class _GlucosaListViewState extends State<GlucosaListView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewModel = Provider.of<GlucosaViewModel>(context, listen: false);
+      viewModel.importarDesdeFirestore();
+      viewModel.cargarRegistrosLocal(widget.idUsuario);
+    });
+  }
 
   String _formatearFechaHora(DateTime fecha) {
     final f =
@@ -29,24 +44,24 @@ class GlucosaListView extends StatelessWidget {
       appBar: AppBar(title: const Text('Historial de Glucosa')),
       body: Consumer<GlucosaViewModel>(
         builder: (context, viewModel, child) {
-          // Muestra indicador de carga si está cargando
           if (viewModel.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Muestra error si existe
           if (viewModel.error != null) {
             return Center(child: Text(viewModel.error!));
           }
 
-          // Muestra mensaje si no hay registros
           if (viewModel.registros.isEmpty) {
             return const Center(child: Text('No hay registros disponibles.'));
           }
 
-          // Lista de registros con opción de refrescar
           return RefreshIndicator(
-            onRefresh: () => viewModel.cargarRegistros(idUsuario),
+            onRefresh: () async {
+              await viewModel.importarDesdeFirestore();
+              await viewModel.cargarRegistrosLocal(widget.idUsuario);
+              await viewModel.sincronizarDatos();
+            },
             child: ListView.builder(
               itemCount: viewModel.registros.length,
               itemBuilder: (context, index) {
@@ -92,20 +107,18 @@ class GlucosaListView extends StatelessWidget {
           );
         },
       ),
-      // Botón para agregar nuevo registro
       floatingActionButton: FloatingActionButton(
         onPressed:
             () => Navigator.pushNamed(
               context,
               '/glucosa/formulario',
-              arguments: idUsuario,
+              arguments: widget.idUsuario,
             ),
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  /// Muestra un diálogo de confirmación antes de eliminar un registro
   void _confirmarEliminacion(
     BuildContext context,
     GlucosaViewModel viewModel,

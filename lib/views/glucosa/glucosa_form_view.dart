@@ -98,8 +98,6 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
       );
 
       final glucosaVM = Provider.of<GlucosaViewModel>(context, listen: false);
-      await glucosaVM.agregarRegistro(nuevo);
-
       if (widget.registroExistente != null) {
         // Actualizar registro existente
         await glucosaVM.actualizarRegistro(nuevo);
@@ -137,90 +135,180 @@ class _GlucosaFormViewState extends State<GlucosaFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nuevo Registro de Glucosa'),
+        title: Text(
+          widget.registroExistente == null
+              ? 'Nuevo Registro de Glucosa'
+              : 'Editar Registro',
+        ),
         backgroundColor: const Color(0xFF3058a6),
+        elevation: 2,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nivelController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Nivel de glucosa',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese un valor';
-                  }
-                  final parsed = double.tryParse(value);
-                  if (parsed == null || parsed <= 0) {
-                    return 'Debe ser un número válido';
-                  }
-                  return null;
-                },
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFe3eafc), Color(0xFFf7f7fa)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _fechaController,
-                readOnly: true,
-                onTap: () => _seleccionarFecha(context),
-                decoration: const InputDecoration(
-                  labelText: 'Fecha',
-                  border: OutlineInputBorder(),
-                  hintText: 'Ej: 2025-07-02',
+              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        widget.registroExistente == null
+                            ? 'Agregar Registro'
+                            : 'Editar Registro',
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF3058a6),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Completa los datos para guardar tu registro de glucosa.',
+                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      TextFormField(
+                        controller: _nivelController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Nivel de glucosa',
+                          prefixIcon: const Icon(
+                            Icons.bloodtype,
+                            color: Colors.redAccent,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Ingrese un valor';
+                          }
+                          final parsed = double.tryParse(value);
+                          if (parsed == null || parsed <= 0) {
+                            return 'Debe ser un número válido';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _fechaController,
+                        readOnly: true,
+                        onTap: () => _seleccionarFecha(context),
+                        decoration: InputDecoration(
+                          labelText: 'Fecha',
+                          prefixIcon: const Icon(
+                            Icons.calendar_today,
+                            color: Color(0xFF3058a6),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Ej: 2025-07-02',
+                        ),
+                        validator: (value) {
+                          if (_fechaSeleccionada == null) {
+                            return 'Seleccione una fecha';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _horaController,
+                        readOnly: true,
+                        onTap: () => _seleccionarHora(context),
+                        decoration: InputDecoration(
+                          labelText: 'Hora',
+                          prefixIcon: const Icon(
+                            Icons.access_time,
+                            color: Color(0xFF3058a6),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Ej: 08:30',
+                        ),
+                        validator: (value) {
+                          if (_horaSeleccionada == null) {
+                            return 'Seleccione una hora';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _momentoController,
+                        decoration: InputDecoration(
+                          labelText: 'Momento del día (ej. ayunas)',
+                          prefixIcon: const Icon(
+                            Icons.wb_sunny,
+                            color: Color(0xFFf45501),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Ingrese el momento'
+                                    : null,
+                      ),
+                      const SizedBox(height: 28),
+                      ElevatedButton(
+                        onPressed: _guardar,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFf45501),
+                          foregroundColor: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: Text(
+                          widget.registroExistente == null
+                              ? 'Guardar Registro'
+                              : 'Actualizar Registro',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                validator: (value) {
-                  if (_fechaSeleccionada == null) {
-                    return 'Seleccione una fecha';
-                  }
-                  return null;
-                },
               ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _horaController,
-                readOnly: true,
-                onTap: () => _seleccionarHora(context),
-                decoration: const InputDecoration(
-                  labelText: 'Hora',
-                  border: OutlineInputBorder(),
-                  hintText: 'Ej: 08:30',
-                ),
-                validator: (value) {
-                  if (_horaSeleccionada == null) {
-                    return 'Seleccione una hora';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _momentoController,
-                decoration: const InputDecoration(
-                  labelText: 'Momento del día (ej. ayunas)',
-                  border: OutlineInputBorder(),
-                ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? 'Ingrese el momento'
-                            : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _guardar,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFf45501),
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Guardar Registro'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
