@@ -1,7 +1,6 @@
 // lib/services/glucosa_sync_service.dart
 // Servicio que sincroniza datos de glucosa entre SQLite y Firebase en la app CheckINC.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:checkinc/models/glucosa_model.dart';
 import 'package:checkinc/services/firestore_service.dart';
 import 'package:checkinc/services/local_db_service.dart';

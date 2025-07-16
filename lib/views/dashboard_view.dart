@@ -3,6 +3,7 @@ import 'package:checkinc/views/recordatorio/recordatorio_form_view.dart';
 import 'package:flutter/material.dart';
 import 'package:checkinc/views/glucosa/glucosa_list_view.dart';
 import 'package:checkinc/views/glucosa/glucosa_form_view.dart';
+import 'package:checkinc/views/glucosa/glucosa_bar_chart.dart';
 
 class DashboardView extends StatelessWidget {
   final UsuarioModel usuario;
@@ -25,6 +26,9 @@ class DashboardView extends StatelessWidget {
               'Bienvenido a CheckINC',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 20),
+            // Gráfico de barras semanal de glucosa
+            GlucosaBarChart(idUsuario: usuario.id),
             const SizedBox(height: 20),
             Card(
               child: ListTile(
