@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.checkinc.app-mergeDebugResources-51:/values-sv/values-sv.xml",
+            "outputFile": "com.example.checkinc.app-mergeDebugResources-53:/values-sv/values-sv.xml",
             "map": [
                 {
                     "source": "C:\\Users\\angel\\.gradle\\caches\\transforms-3\\9fecd458fa5210fb03b9f891911dfb12\\transformed\\core-1.13.1\\res\\values-sv\\values-sv.xml",

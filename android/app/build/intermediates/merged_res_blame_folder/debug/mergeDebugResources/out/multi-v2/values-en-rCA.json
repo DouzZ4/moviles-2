@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.checkinc.app-mergeDebugResources-51:/values-en-rCA/values-en-rCA.xml",
+            "outputFile": "com.example.checkinc.app-mergeDebugResources-53:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
                     "source": "C:\\Users\\angel\\.gradle\\caches\\transforms-3\\1cf057665f8b1800f605ef71a3f0de8b\\transformed\\preference-1.2.1\\res\\values-en-rCA\\values-en-rCA.xml",

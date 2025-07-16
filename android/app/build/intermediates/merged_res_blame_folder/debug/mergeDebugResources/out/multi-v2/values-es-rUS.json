@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.checkinc.app-mergeDebugResources-51:/values-es-rUS/values-es-rUS.xml",
+            "outputFile": "com.example.checkinc.app-mergeDebugResources-53:/values-es-rUS/values-es-rUS.xml",
             "map": [
                 {
                     "source": "C:\\Users\\angel\\.gradle\\caches\\transforms-3\\d733cbe2cc974c13a8e0d9da9392a905\\transformed\\jetified-play-services-base-18.1.0\\res\\values-es-rUS\\values.xml",

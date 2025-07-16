@@ -1,12 +1,13 @@
 import 'package:checkinc/models/usuario_model.dart';
+import 'package:checkinc/views/recordatorio/recordatorio_form_view.dart';
 import 'package:flutter/material.dart';
 import 'package:checkinc/views/glucosa/glucosa_list_view.dart';
 import 'package:checkinc/views/glucosa/glucosa_form_view.dart';
 
 class DashboardView extends StatelessWidget {
-final UsuarioModel usuario;
+  final UsuarioModel usuario;
 
-const DashboardView({super.key, required this.usuario});
+  const DashboardView({super.key, required this.usuario});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,23 @@ const DashboardView({super.key, required this.usuario});
               ),
             ),
             const SizedBox(height: 10),
-            // Aquí puedes agregar más módulos
+            Card(
+              child: ListTile(
+                leading: const Icon(
+                  Icons.notifications,
+                  color: Color(0xFFf45501),
+                ),
+                title: const Text('Crear Recordatorio'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const RecordatorioFormView(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

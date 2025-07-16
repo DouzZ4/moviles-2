@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.checkinc.app-mergeDebugResources-51:/values-bn/values-bn.xml",
+            "outputFile": "com.example.checkinc.app-mergeDebugResources-53:/values-bn/values-bn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\angel\\.gradle\\caches\\transforms-3\\8d690f4a5ae3c579f16734a6c8bf67c4\\transformed\\jetified-credentials-1.2.0-rc01\\res\\values-bn\\values-bn.xml",

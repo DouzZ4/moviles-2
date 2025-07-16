@@ -4,6 +4,7 @@
 
 import 'package:checkinc/views/glucosa/glucosa_form_view.dart'
     show GlucosaFormView;
+import 'package:checkinc/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:checkinc/viewmodels/glucosa_viewmodel.dart';
@@ -91,6 +92,33 @@ class _GlucosaListViewState extends State<GlucosaListView> {
                         },
                       ),
                       IconButton(
+                        icon: const Icon(
+                          Icons.notifications_active,
+                          color: Colors.orange,
+                        ),
+                        tooltip: 'Programar recordatorio',
+                        onPressed: () async {
+                          // Programa una notificación para el registro actual (ejemplo: 24h después)
+                          final fechaNotificacion = registro.fecha.add(
+                            const Duration(hours: 24),
+                          );
+                          await NotificationService.scheduleNotification(
+                            id: registro.id.hashCode,
+                            title: 'Recordatorio de glucosa',
+                            body:
+                                'Recuerda registrar tu nivel de glucosa nuevamente.',
+                            dateTime: fechaNotificacion,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Notificación programada para 24h después de este registro.',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed:
                             () => _confirmarEliminacion(
@@ -98,6 +126,25 @@ class _GlucosaListViewState extends State<GlucosaListView> {
                               viewModel,
                               registro.id,
                             ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.notifications_off,
+                          color: Colors.grey,
+                        ),
+                        tooltip: 'Cancelar recordatorio',
+                        onPressed: () async {
+                          await NotificationService.cancelNotification(
+                            registro.id.hashCode,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Notificación cancelada para este registro.',
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

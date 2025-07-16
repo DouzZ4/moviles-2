@@ -1,7 +1,3 @@
-// glucosa_model.dart
-// Modelo de datos para los registros de glucosa en la app CheckINC.
-// Permite serialización y deserialización para Firestore y SQLite.
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GlucosaModel {

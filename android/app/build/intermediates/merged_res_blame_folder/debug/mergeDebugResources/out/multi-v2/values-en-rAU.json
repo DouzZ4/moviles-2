@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.checkinc.app-mergeDebugResources-51:/values-en-rAU/values-en-rAU.xml",
+            "outputFile": "com.example.checkinc.app-mergeDebugResources-53:/values-en-rAU/values-en-rAU.xml",
             "map": [
                 {
                     "source": "C:\\Users\\angel\\.gradle\\caches\\transforms-3\\658ba7ea7ba0a7d93135093f374081a7\\transformed\\browser-1.4.0\\res\\values-en-rAU\\values-en-rAU.xml",

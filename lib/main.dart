@@ -1,7 +1,4 @@
-// main.dart
-// Punto de entrada de la aplicación CheckINC.
-// Configura Firebase, SQLite y el sistema de rutas principal.
-
+import 'package:checkinc/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -20,6 +17,8 @@ import 'package:checkinc/views/glucosa/glucosa_form_view.dart';
 
 /// Función principal que inicializa servicios y ejecuta la app
 void main() async {
+  // Inicializa el servicio de notificaciones
+  await NotificationService.init(); // Inicializa el servicio de notificaciones
   // Asegura la inicialización de los bindings de Flutter
   WidgetsFlutterBinding.ensureInitialized();
   // Inicializa SQLite FFI solo en plataformas de escritorio
@@ -28,9 +27,7 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
   // Inicializa Firebase con las opciones generadas
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Ejecuta la aplicación principal
   runApp(const MyApp());
